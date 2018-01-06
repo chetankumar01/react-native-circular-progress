@@ -1,12 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {
-  Animated,
-  AppState,
-  Easing,
-  View,
-  ViewPropTypes
-} from 'react-native';
+import React, { PropTypes } from 'react';
+import { View, Animated } from 'react-native';
 import CircularProgress from './CircularProgress';
 const AnimatedProgress = Animated.createAnimatedComponent(CircularProgress);
 
@@ -15,32 +8,12 @@ export default class AnimatedCircularProgress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      appState: AppState.currentState,
       chartFillAnimation: new Animated.Value(props.prefill || 0)
     }
   }
 
   componentDidMount() {
     this.animateFill();
-    AppState.addEventListener('change', this.handleAppStateChange);
-  }
-  
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange);
-  }
-
-  handleAppStateChange = nextAppState => {
-    if (this.state.appState.match(/inactive|background/) &&
-        nextAppState === 'active') {
-      // Fix bug on Android where the drawing is not displayed after the app is
-      // backgrounded / screen is turned off. Restart the animation when the app
-      // comes back to the foreground.
-      this.setState({
-        chartFillAnimation: new Animated.Value(this.props.prefill || 0)
-      });
-      this.animateFill();
-    }
-    this.setState({ appState: nextAppState });
   }
 
   componentDidUpdate(prevProps) {
@@ -50,7 +23,7 @@ export default class AnimatedCircularProgress extends React.Component {
   }
 
   animateFill() {
-    const { tension, friction, onAnimationComplete } = this.props;
+    const { tension, friction } = this.props;
 
     Animated.spring(
       this.state.chartFillAnimation,
@@ -59,17 +32,14 @@ export default class AnimatedCircularProgress extends React.Component {
         tension,
         friction
       }
-    ).start(onAnimationComplete);
+    ).start();
   }
-
+  
   performLinearAnimation(toValue, duration) {
-    const { onLinearAnimationComplete } = this.props;
-
     Animated.timing(this.state.chartFillAnimation, {
       toValue: toValue,
-      easing: Easing.linear,
       duration: duration
-    }).start(onLinearAnimationComplete);
+    }).start();
   }
 
   render() {
@@ -85,17 +55,15 @@ export default class AnimatedCircularProgress extends React.Component {
 }
 
 AnimatedCircularProgress.propTypes = {
-  style: ViewPropTypes.style,
+  style: View.propTypes.style,
   size: PropTypes.number.isRequired,
   fill: PropTypes.number,
   prefill: PropTypes.number,
   width: PropTypes.number.isRequired,
-  tintColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  backgroundColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  tintColor: PropTypes.string,
+  backgroundColor: PropTypes.string,
   tension: PropTypes.number,
-  friction: PropTypes.number,
-  onAnimationComplete: PropTypes.func,
-  onLinearAnimationComplete: PropTypes.func,
+  friction: PropTypes.number
 }
 
 AnimatedCircularProgress.defaultProps = {

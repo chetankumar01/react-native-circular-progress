@@ -17,7 +17,7 @@ React Native component for creating animated, circular progress with ReactART. U
 
 ## Installation
 
-1. Install library `npm i --save react-native-circular-progress`
+1. Install library `npm i --save react-native-circular-progress-patch`
 2. As Expo user you are good to go right now, or alternatively install ART:
 3. Link ART library to your ReactNative project ([how to link a library?](https://facebook.github.io/react-native/docs/linking-libraries-ios.html#content)). You'll find ReactART library in `node_modules/react-native/Libraries/ART/ART.xcodeproj`
 
@@ -26,7 +26,7 @@ React Native component for creating animated, circular progress with ReactART. U
 Import CircularProgress or AnimatedCircularProgress.
 
 ```js
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { AnimatedCircularProgress } from 'react-native-circular-progress-patch';
 ```
 
 Use as follows:
